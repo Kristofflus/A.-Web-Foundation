@@ -1,0 +1,20 @@
+h1 {
+  font-size: 36px;
+  color: #dc2626;
+  text-align: center;
+}
+
+p {
+  color: #2563eb;
+}
+
+.highlight {
+  background-color: yellow;
+  padding: 8px;
+}
+
+.box {
+  background-color: #dbeafe;
+  border: 2px;
+  border: solid;
+}
