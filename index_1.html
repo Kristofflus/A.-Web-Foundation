@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kristoffer Fretland Øygarden</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Kristoffer Fretland Øygarden</h1>
+      <p>
+        Hello! I am from Norway. I work in the public sector, mainly with data
+        related to higher education enrollment. <br />
+        I am excited to learn more about interactive data visualization tailored for
+        online publications.
+      </p>
+    </header>
+
+    <main>
+      <h2>Some of my hobbies:</h2>
+      <ul>
+        <li>Piano</li>
+        <li>Japanese</li>
+        <li>Going to the gym</li>
+      </ul>
+
+      <h2>My three favorite books I've read so far in 2026:</h2>
+      <ol>
+        <li>The remains of the day</li>
+        <li>Entangled Life</li>
+        <li>There is no antimemetics division</li>
+      </ol>
+
+      <h2>Here is my favourite website (not really):</h2>
+      <p>
+        <a href="https://monkeytype.com/">Monkeytype</a> is a good webpage to
+        practice typing.
+      </p>
+
+      <h3>Look at this fella!</h3>
+      <img
+        src="https://media.snl.no/media/44518/standard_compressed_lemen.jpg"
+        alt="A fine specimen of lemmus lemmus, the Norwegian lemming"
+        width="400"
+        height="300"
+      />
+
+      <section class="chart-section" aria-labelledby="chart-heading">
+        <h2 id="chart-heading">My first D3.js bar chart</h2>
+        <div class="chart-container">
+          <div id="bar-chart"></div>
+        </div>
+        <p class="chart-caption">Values for categories A, B, C and D.</p>
+      </section>
+    </main>
+
+    <!-- D3.js is loaded directly from a CDN; no installation is required. -->
+    <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+    <script>
+      const data = [
+        { name: "A", value: 1 },
+        { name: "B", value: 5 },
+        { name: "C", value: 8 },
+        { name: "D", value: 10 }
+      ];
+
+      const width = 720;
+      const height = 380;
+      const margin = { top: 45, right: 25, bottom: 50, left: 50 };
+      const innerWidth = width - margin.left - margin.right;
+      const innerHeight = height - margin.top - margin.bottom;
+
+      const svg = d3.select("#bar-chart")
+        .append("svg")
+        .attr("viewBox", `0 0 ${width} ${height}`)
+        .attr("role", "img")
+        .attr("aria-label", "Bar chart: A is 1, B is 5, C is 8, and D is 10.");
+
+      const plot = svg.append("g")
+        .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+      const x = d3.scaleBand()
+        .domain(data.map(d => d.name))
+        .range([0, innerWidth])
+        .padding(0.3);
+
+      const y = d3.scaleLinear()
+        .domain([0, d3.max(data, d => d.value)])
+        .nice()
+        .range([innerHeight, 0]);
+
+      // Horizontal grid lines behind the bars.
+      plot.append("g")
+        .attr("class", "chart-grid")
+        .call(d3.axisLeft(y).ticks(5).tickSize(-innerWidth).tickFormat(() => ""));
+
+      plot.selectAll(".chart-bar")
+        .data(data)
+        .join("rect")
+        .attr("class", "chart-bar")
+        .attr("x", d => x(d.name))
+        .attr("y", d => y(d.value))
+        .attr("width", x.bandwidth())
+        .attr("height", d => innerHeight - y(d.value))
+        .append("title")
+        .text(d => `${d.name}: ${d.value}`);
+
+      // Numeric labels above each bar.
+      plot.selectAll(".chart-value")
+        .data(data)
+        .join("text")
+        .attr("class", "chart-value")
+        .attr("x", d => x(d.name) + x.bandwidth() / 2)
+        .attr("y", d => y(d.value) - 10)
+        .attr("text-anchor", "middle")
+        .text(d => d.value);
+
+      plot.append("g")
+        .attr("class", "chart-axis")
+        .attr("transform", `translate(0, ${innerHeight})`)
+        .call(d3.axisBottom(x).tickSizeOuter(0));
+
+      plot.append("g")
+        .attr("class", "chart-axis")
+        .call(d3.axisLeft(y).ticks(5).tickFormat(d3.format("d")));
+    </script>
+  </body>
+</html>
